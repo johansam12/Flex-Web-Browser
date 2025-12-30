@@ -46,3 +46,5 @@ One of the challenges I faced is the UI freezing while waiting for a network res
 The browser displays real-time data by using the google-genai SDK it looks into web through the model to provide factual information.
 
 Finally, I incorporated 'markdown' library that is used to convert the AI text formats such as the code, lists and blocks of code into HTML. Once it is converted the HTML is then added to QTextEdit widget in which I applied custom CSS to make sure the AI's response matches the browser's theme.
+
+## Total Development time: 4 Hours 16 Minutes
