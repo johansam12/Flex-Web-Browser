@@ -12,6 +12,19 @@ Flex is a modern, frameless browser with a built-in Gemini AI assistant.
 4. Run the browser:
    `python main.py`
 
+## API Setup
+
+To use the AI features, you need a Google Gemini API Key.
+
+1. Get a free key from Google AI Studio.
+2. Set the environment variable on your machine:
+
+   Windows: setx GEMINI_API_KEY "your_key_here"
+   Mac/Linux: export GEMINI_API_KEY="your_key_here"
+
+3. Restart your terminal/IDE and run python main.py.
+
+
 ## Technical Write-Up
 
 - AI Model used in the project: I went with Google Gemini 2.0 Flash, in which I integrated that into Google Search tool.
