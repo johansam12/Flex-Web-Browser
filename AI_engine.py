@@ -1,8 +1,15 @@
+import os
 from google import genai
 from google.genai import types
 
-# REPLACE WITH YOUR ACTUAL KEY
-client = genai.Client(api_key="AIzaSyCa7ZqR4DSvanjOBrrrlvZCrMccbUw6Bdc") 
+# This looks for a key named 'GEMINI_API_KEY' on the user's system
+api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    # This helps the recruiter understand why it isn't working
+    print("Error: GEMINI_API_KEY not found in environment variables.")
+
+client = genai.Client(api_key=api_key)
 
 def get_ai_research(query):
     try:
@@ -16,4 +23,5 @@ def get_ai_research(query):
         )
         return response.text
     except Exception as e:
+
         return f"AI Research Error: {str(e)}"
