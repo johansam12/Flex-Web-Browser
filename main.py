@@ -1,5 +1,5 @@
 import sys, os
-# --- 1. FORCE TASKBAR ICON & NAME FIX ---
+
 import ctypes
 try:
     # This ID tells Windows: "I am a real app named Flex, not just Python"
@@ -15,6 +15,12 @@ from PyQt6.QtWebEngineWidgets import *
 from PyQt6.QtWebEngineCore import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
+from urllib.parse import quote
+from PyQt6.QtWidgets import QLineEdit
+from PyQt6.QtCore import QUrl
+from PyQt6.QtWidgets import QMainWindow, QApplication
+from PyQt6.QtGui import QIcon
+import sys
 from AI_engine import get_ai_research
 
 # --- FLEX HOME PAGE ---
@@ -59,6 +65,16 @@ HOME_PAGE_HTML = """
 </body>
 </html>
 """
+
+class FlexBrowser(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        
+        # ... your other window code ...
+
+        # --- THIS IS THE LINE TO ADD ---
+        # "flex_logo.ico" must be the name of your .ico file
+        self.setWindowIcon(QIcon("flex.ico"))
 
 # --- HELPER: GENERATE PRO LOGO ---
 def create_app_icon():
@@ -144,6 +160,46 @@ class FlexTitleBar(QWidget):
             delta = event.globalPosition().toPoint() - self.parent.old_pos
             self.parent.move(self.parent.pos() + delta)
             self.parent.old_pos = event.globalPosition().toPoint()
+
+
+
+def get_refined_url(user_input):
+    user_input = user_input.strip()
+
+    # 1. If it's already a full URL (has http/https), just return it
+    if user_input.startswith(("http://", "https://")):
+        return user_input
+
+    # 2. If it looks like a domain (has a dot and NO spaces, e.g., "google.com")
+    # We check for "." to see if it's a domain, and ensure no spaces exist.
+    if "." in user_input and " " not in user_input:
+        return "https://" + user_input
+
+    # 3. If it's just a word (e.g., "google" or "how to code")
+    # Redirect to a search engine with the query
+    # quote() handles spaces and special characters so they don't break the URL
+    return f"https://www.google.com/search?q={quote(user_input)}"
+
+def navigate_to_url(self):
+    # 1. Get whatever the user typed
+    q = self.url_bar.text().strip()
+
+    # 2. Logic: Is it a URL or a Search?
+    if "." in q and " " not in q:
+        # It has a dot and no spaces? Treat it as a Website.
+        if not q.startswith("http"):
+            url = "https://" + q
+        else:
+            url = q
+    else:
+        # It's a word or has spaces? Treat it as a Google Search.
+        # This fixes the "google" error you saw in the screenshot!
+        search_query = quote(q)
+        url = f"https://www.google.com/search?q={search_query}"
+
+    # 3. Tell the browser to go to the final URL
+    self.browser.setUrl(QUrl(url))
+
 
 # --- MAIN BROWSER ---
 class FlexBrowser(QMainWindow):
